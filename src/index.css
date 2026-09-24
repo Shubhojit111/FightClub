@@ -1,0 +1,212 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --ts-black: #0a0a0a;
+  --ts-dark: #0d0d0d;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-white text-black
+      px-6 py-3 text-[11px] font-medium tracking-button uppercase
+      transition-all duration-300 ease-out;
+  }
+  .btn-primary:hover {
+    @apply bg-neutral-200 scale-[1.02];
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center rounded-full border border-white/70
+      bg-transparent text-white px-6 py-3 text-[11px] font-medium tracking-button uppercase
+      transition-all duration-300 ease-out;
+  }
+  .btn-outline:hover {
+    @apply bg-white/20 border-white/40 text-white;
+  }
+  .btn-outline.is-solid:hover,
+  a.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.35);
+    color: #fff;
+  }
+
+  .btn-outline-dark {
+    @apply inline-flex items-center justify-center rounded-full border border-black/30
+      bg-transparent text-black px-6 py-3 text-[11px] font-medium tracking-button uppercase
+      transition-all duration-300 ease-out;
+  }
+
+  .nav-link {
+    @apply text-[11px] font-medium tracking-nav uppercase text-white/90
+      transition-colors duration-200 hover:text-white relative;
+  }
+
+  .serif-display {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Card expand overlay */
+.feature-card-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.72) 45%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+}
+
+/* Smooth image hover */
+.img-zoom {
+  transition: transform 1.2s var(--ease-out-expo);
+}
+.group:hover .img-zoom {
+  transform: scale(1.06);
+}
+
+/* Location input underline */
+.location-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  color: white;
+  outline: none;
+  padding: 12px 0;
+  font-size: 14px;
+  width: 100%;
+  transition: border-color 0.3s ease;
+}
+.location-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+.location-input:focus {
+  border-bottom-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Hide default details marker */
+details summary::-webkit-details-marker {
+  display: none;
+}
+details summary {
+  list-style: none;
+}
+
+/* Marquee for classes if needed */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+/* Hide native horizontal scrollbar (use arrow controls instead) */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Leaflet overrides */
+.leaflet-container {
+  font-family: Inter, system-ui, sans-serif;
+  background: #eef1f3;
+}
+.leaflet-control-attribution {
+  font-size: 10px !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+.ts-club-pin {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Move zoom controls to bottom right */
+.leaflet-control-zoom {
+  position: absolute;
+  bottom: 20px !important;
+  right: 20px !important;
+  top: auto !important;
+  left: auto !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.leaflet-control-zoom a {
+  background-color: #0a0a0a !important;
+  color: #fff !important;
+  border: none !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  font-size: 18px !important;
+  font-weight: 300 !important;
+  transition: all 0.3s ease !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #333 !important;
+  transform: scale(1.05);
+}
+
+.leaflet-control-zoom-in {
+  border-radius: 8px 8px 0 0 !important;
+}
+
+.leaflet-control-zoom-out {
+  border-radius: 0 0 8px 8px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
