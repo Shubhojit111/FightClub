@@ -26,7 +26,7 @@ export default function Hero() {
           transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="serif-display text-center text-[42px] leading-none sm:text-[56px] md:text-[68px] lg:text-[78px] xl:text-[86px] text-white font-normal tracking-[-0.02em]"
         >
-          <span className="inline-block">Training</span>
+          
           Training for life
         </motion.h1>
       </div>
