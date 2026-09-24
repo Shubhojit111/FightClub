@@ -21,12 +21,12 @@ export default function BecomeMemberCTA() {
           <div className="absolute inset-0 bg-black/20" />
 
           <div className="relative z-10 flex h-full w-full flex-col items-center justify-center m-10 px-5 text-center">
-            <h2 className="serif-display text-[40px] sm:text-[52px] md:text-[64px] lg:text-[74px] text-white font-normal tracking-[-0.02em] drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">
+            <h2 className="serif-display text-[32px] sm:text-[52px] md:text-[64px] lg:text-[74px] text-white font-normal tracking-[-0.02em] drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">
               Become a member
             </h2>
             <a
               href="#clubs"
-              className="mt-6 md:mt-8 inline-flex items-center justify-center rounded-full bg-white text-black px-6 py-2.5 text-[11px] font-medium tracking-[0.1em] uppercase hover:bg-neutral-100 transition-colors shadow-md"
+              className="mt-4 md:mt-8 inline-flex items-center justify-center rounded-full bg-white text-black px-6 py-2.5 text-[10px] sm:text-[11px] font-medium tracking-[0.1em] uppercase hover:bg-neutral-100 transition-colors shadow-md"
             >
               Find Out More
             </a>

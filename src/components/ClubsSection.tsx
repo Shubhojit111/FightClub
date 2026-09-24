@@ -1,9 +1,19 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { clubs } from '../data/content'
 
 export default function ClubsSection() {
   const [query, setQuery] = useState('')
+
+  // Receive search from the LocationFinder strip above the map
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<string>).detail ?? ''
+      setQuery(detail)
+    }
+    window.addEventListener('fc:club-search', handler)
+    return () => window.removeEventListener('fc:club-search', handler)
+  }, [])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -17,7 +27,7 @@ export default function ClubsSection() {
   }, [query])
 
   return (
-    <section id="all-clubs" className="bg-black py-16 md:py-24 lg:py-28">
+    <section id="all-clubs" className="bg-black py-16 md:py-24 lg:py-28 scroll-mt-16">
       <div className="mx-auto max-w-[1600px] px-5 md:px-8 lg:px-10 xl:px-12">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10 md:mb-14">
           <div className="max-w-2xl">

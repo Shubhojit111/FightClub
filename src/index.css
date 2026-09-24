@@ -18,6 +18,8 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+  overflow-x: clip;
 }
 
 body {
@@ -25,7 +27,8 @@ body {
   background: #000;
   color: #fff;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overscroll-behavior-y: none;
 }
 
 ::selection {
@@ -162,6 +165,12 @@ details summary {
 .leaflet-container {
   font-family: Inter, system-ui, sans-serif;
   background: #eef1f3;
+  touch-action: pan-y;
+}
+.fc-map .leaflet-pane,
+.fc-map .leaflet-top,
+.fc-map .leaflet-bottom {
+  touch-action: pan-y;
 }
 .leaflet-control-attribution {
   font-size: 10px !important;

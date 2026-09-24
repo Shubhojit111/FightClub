@@ -6,6 +6,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -150,13 +151,70 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 * i }}
                 >
-                  <a
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="serif-display block py-4 text-3xl text-white border-b border-white/10"
-                  >
-                    {link.label}
-                  </a>
+                  {link.children ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setMobileExpanded((prev) =>
+                            prev === link.label ? null : link.label
+                          )
+                        }
+                        aria-expanded={mobileExpanded === link.label}
+                        className="serif-display flex w-full items-center justify-between py-4 text-3xl text-white border-b border-white/10 text-left"
+                      >
+                        <span>{link.label}</span>
+                        <svg
+                          width="12"
+                          height="8"
+                          viewBox="0 0 12 8"
+                          fill="none"
+                          className={`shrink-0 opacity-60 transition-transform duration-300 ${
+                            mobileExpanded === link.label ? 'rotate-180' : ''
+                          }`}
+                        >
+                          <path
+                            d="M1 1.5l5 5 5-5"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {mobileExpanded === link.label && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="flex flex-col pb-2">
+                              {link.children.map((child) => (
+                                <a
+                                  key={child.label}
+                                  href={child.href}
+                                  onClick={() => setMobileOpen(false)}
+                                  className="block py-3 pl-2 text-[15px] text-white/70 hover:text-white transition-colors border-b border-white/5"
+                                >
+                                  {child.label}
+                                </a>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  ) : (
+                    <a
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="serif-display block py-4 text-3xl text-white border-b border-white/10"
+                    >
+                      {link.label}
+                    </a>
+                  )}
                 </motion.div>
               ))}
               <a

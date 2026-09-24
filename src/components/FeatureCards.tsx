@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { featureCards } from '../data/content'
 
@@ -16,11 +17,18 @@ function Title({ title }: { title: string }) {
 }
 
 export default function FeatureCards() {
+  const [openId, setOpenId] = useState<string | null>(null)
+
+  const toggle = (id: string) =>
+    setOpenId((prev) => (prev === id ? null : id))
+
   return (
     <section className="relative bg-black pb-4 md:pb-6 -mt-2">
       <div className="mx-auto max-w-[1600px] px-5 md:px-8 lg:px-10 xl:px-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-3 lg:gap-3.5">
-          {featureCards.map((card, index) => (
+          {featureCards.map((card, index) => {
+            const open = openId === card.id
+            return (
             <motion.article
               key={card.id}
               initial={{ opacity: 0, y: 60 }}
@@ -31,7 +39,16 @@ export default function FeatureCards() {
                 delay: index * 0.08,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="group relative isolate overflow-hidden rounded-[16px] md:rounded-[18px] aspect-[3/4] cursor-pointer select-none"
+              onClick={() => toggle(card.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  toggle(card.id)
+                }
+              }}
+              tabIndex={0}
+              aria-expanded={open}
+              className="group relative isolate overflow-hidden rounded-[16px] md:rounded-[18px] aspect-[3/4] cursor-pointer select-none outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               <img
                 src={card.image}
@@ -50,16 +67,20 @@ export default function FeatureCards() {
 
               {/* Resting gradient */}
               <div
-                className="absolute inset-0 transition-opacity duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-0"
+                className={`absolute inset-0 transition-opacity duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-0 ${
+                  open ? 'opacity-0' : ''
+                }`}
                 style={{
                   background:
                     'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 42%, rgba(0,0,0,0.05) 100%)',
                 }}
               />
 
-              {/* Hover veil */}
+              {/* Hover / open veil */}
               <div
-                className="absolute inset-0 opacity-0 transition-opacity duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100"
+                className={`absolute inset-0 transition-opacity duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 ${
+                  open ? 'opacity-100' : 'opacity-0'
+                }`}
                 style={{
                   background:
                     'linear-gradient(180deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.78) 50%, rgba(0,0,0,0.88) 100%)',
@@ -68,9 +89,14 @@ export default function FeatureCards() {
 
               {/* Content */}
               <div className="absolute inset-0 z-10 flex flex-col justify-end p-4 md:p-5 lg:p-6">
-                {/* Description + CTA — reveal on hover */}
-                <div className="mb-auto pt-1 max-h-0 overflow-hidden opacity-0 translate-y-4 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:max-h-[280px] group-hover:opacity-100 group-hover:translate-y-0">
-                  <p className="text-[13px] md:text-[14px] lg:text-[15px] leading-[1.55] text-white/90 font-light">
+                {/* Description + CTA — reveal on hover (desktop) or tap (mobile) */}
+                <div
+                  className={`mb-auto pt-1 overflow-hidden transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:max-h-[280px] group-hover:opacity-100 group-hover:translate-y-0 ${
+                    open
+                      ? 'max-h-[280px] opacity-100 translate-y-0'
+                      : 'max-h-0 opacity-0 translate-y-4'
+                  }`}
+                ><p className="text-[13px] md:text-[14px] lg:text-[15px] leading-[1.55] text-white/90 font-light">
                     {card.description}
                   </p>
                   <a
@@ -89,17 +115,29 @@ export default function FeatureCards() {
                 </div>
               </div>
 
-              {/* + button — always visible at bottom right, rotates on hover */}
-              <span
-                className="absolute bottom-4 right-4 md:bottom-5 md:right-5 lg:bottom-6 lg:right-6 z-20 flex h-8 w-8 md:h-9 md:w-9 shrink-0 items-center justify-center rounded-full border border-white/45 text-white transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-white group-hover:text-black group-hover:border-white group-hover:scale-110"
-                aria-hidden
+              {/* + button — tap toggles on mobile, hover on desktop */}
+              <button
+                type="button"
+                aria-label={open ? `Close ${card.title}` : `Open ${card.title}`}
+                aria-expanded={open}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  toggle(card.id)
+                }}
+                className={`absolute bottom-4 right-4 md:bottom-5 md:right-5 lg:bottom-6 lg:right-6 z-20 flex h-8 w-8 md:h-9 md:w-9 shrink-0 items-center justify-center rounded-full border transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-white group-hover:text-black group-hover:border-white group-hover:scale-110 ${
+                  open
+                    ? 'bg-white text-black border-white scale-110'
+                    : 'border-white/45 text-white'
+                }`}
               >
                 <svg
                   width="11"
                   height="11"
                   viewBox="0 0 12 12"
                   fill="none"
-                  className="transition-transform duration-800 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-45"
+                  className={`transition-transform duration-800 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-45 ${
+                    open ? 'rotate-45' : ''
+                  }`}
                 >
                   <path
                     d="M6 1.5v9M1.5 6h9"
@@ -108,9 +146,10 @@ export default function FeatureCards() {
                     strokeLinecap="round"
                   />
                 </svg>
-              </span>
+              </button>
             </motion.article>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

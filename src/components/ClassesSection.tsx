@@ -1,9 +1,13 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { classCards } from '../data/content'
 
 export default function ClassesSection() {
   const scrollerRef = useRef<HTMLDivElement>(null)
+  const [openName, setOpenName] = useState<string | null>(null)
+
+  const toggle = (name: string) =>
+    setOpenName((prev) => (prev === name ? null : name))
 
   const scrollBy = (dir: -1 | 1) => {
     const el = scrollerRef.current
@@ -41,27 +45,50 @@ export default function ClassesSection() {
         <div className="relative">
           <div
             ref={scrollerRef}
-            className="flex gap-4 md:gap-5 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth hide-scrollbar"
+            className="flex gap-4 md:gap-5 overflow-x-auto overflow-y-hidden pb-2 snap-x snap-proximity scroll-smooth hide-scrollbar overscroll-x-contain -mx-5 px-5 md:mx-0 md:px-0"
           >
-            {classCards.map((item, i) => (
+            {classCards.map((item, i) => {
+              const open = openName === item.name
+              return (
               <motion.article
                 key={item.name}
                 initial={{ opacity: 0, y: 32 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: '-5%' }}
                 transition={{ duration: 0.65, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="group relative shrink-0 w-[280px] sm:w-[320px] md:w-[360px] snap-start overflow-hidden rounded-2xl aspect-[3/4] bg-[#111] cursor-pointer"
+                onClick={() => toggle(item.name)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    toggle(item.name)
+                  }
+                }}
+                tabIndex={0}
+                aria-expanded={open}
+                className="group relative shrink-0 w-[78vw] max-w-[280px] sm:w-[320px] sm:max-w-none md:w-[360px] snap-start overflow-hidden rounded-2xl aspect-[3/4] bg-[#111] cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               >
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="absolute inset-0 h-full w-full object-cover transition-all duration-1200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:blur-[2px]"
+                  className={`absolute inset-0 h-full w-full object-cover transition-all duration-1200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:blur-[2px] ${
+                    open ? 'scale-105 blur-[2px]' : ''
+                  }`}
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:from-black/90 group-hover:via-black/55" />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:from-black/90 group-hover:via-black/55 ${
+                    open ? 'from-black/90 via-black/55' : ''
+                  }`}
+                />
 
-                {/* Arrow top-right on hover */}
-                <span className="absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/40 text-white opacity-0 translate-y-1 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:translate-y-0 bg-black/20 backdrop-blur-sm">
+                {/* Arrow top-right on hover / open */}
+                <span
+                  className={`absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/40 text-white transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:translate-y-0 bg-black/20 backdrop-blur-sm ${
+                    open
+                      ? 'opacity-100 translate-y-0'
+                      : 'opacity-0 translate-y-1'
+                  }`}
+                >
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path
                       d="M2 7h10M8 3l4 4-4 4"
@@ -74,17 +101,28 @@ export default function ClassesSection() {
                 </span>
 
                 <div className="absolute inset-x-0 bottom-0 z-10 p-5 md:p-6">
-                  <div className="transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1">
+                  <div
+                    className={`transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 ${
+                      open ? '-translate-y-1' : ''
+                    }`}
+                  >
                     <h3 className="text-[22px] md:text-[24px] text-white font-normal tracking-tight">
                       {item.name}
                     </h3>
-                    <p className="mt-0 max-h-0 overflow-hidden text-[13px] md:text-[14px] text-white/70 leading-relaxed font-light opacity-0 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:mt-2 group-hover:max-h-28 group-hover:opacity-100">
+                    <p
+                      className={`overflow-hidden text-[13px] md:text-[14px] text-white/70 leading-relaxed font-light transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:mt-2 group-hover:max-h-28 group-hover:opacity-100 ${
+                        open
+                          ? 'mt-2 max-h-28 opacity-100'
+                          : 'mt-0 max-h-0 opacity-0'
+                      }`}
+                    >
                       {item.description}
                     </p>
                   </div>
                 </div>
               </motion.article>
-            ))}
+              )
+            })}
           </div>
 
           {/* Prev / Next */}

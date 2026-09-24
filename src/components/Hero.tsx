@@ -5,13 +5,13 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative h-screen min-h-[640px] w-full overflow-hidden bg-black"
+      className="relative h-[100svh] min-h-[560px] w-full overflow-hidden bg-black"
     >
       {/* Full-bleed background */}
       <div className="absolute inset-0">
         <img
           src={heroImg}
-          alt="Athlete training with kettlebell at Third Space"
+          alt="Athlete training with kettlebell at Fight Club"
           className="h-full w-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/55" />
@@ -24,10 +24,10 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="serif-display text-center text-[42px] leading-none sm:text-[56px] md:text-[68px] lg:text-[78px] xl:text-[86px] text-white font-normal tracking-[-0.02em]"
+          className="serif-display text-center text-[42px] leading-none sm:text-[56px] md:text-[68px] lg:text-[78px] xl:text-[86px] text-white font-normal tracking-[-0.02em]  flex sm:gap-20 sm:mr-16 sm:mb-36"
         >
-          
-          Training for life
+          <span>Training</span> 
+          <span>for life</span>
         </motion.h1>
       </div>
 

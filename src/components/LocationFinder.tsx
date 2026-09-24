@@ -6,7 +6,11 @@ export default function LocationFinder() {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
-    document.getElementById('clubs')?.scrollIntoView({ behavior: 'smooth' })
+    // Forward the query to the clubs grid so search actually filters
+    window.dispatchEvent(
+      new CustomEvent('fc:club-search', { detail: query })
+    )
+    document.getElementById('all-clubs')?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
@@ -67,7 +71,7 @@ export default function LocationFinder() {
           </div>
 
           <a
-            href="#clubs"
+            href="#all-clubs"
             className="inline-flex items-center justify-center rounded-full border border-white/70 text-white px-5 py-2.5 text-[10px] font-medium tracking-[0.12em] uppercase hover:bg-white hover:text-black transition-colors whitespace-nowrap self-start sm:self-auto sm:ml-auto"
           >
             Discover All Clubs

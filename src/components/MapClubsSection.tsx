@@ -44,12 +44,31 @@ export default function MapClubsSection() {
   )
 
   return (
-    <section id="clubs" className="relative bg-black py-6 md:py-10">
+    <section id="clubs" className="relative scroll-mt-20 bg-black py-6 md:py-10">
       <div className="mx-auto max-w-[1600px] px-5 md:px-8 lg:px-10 xl:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 overflow-hidden rounded-[20px] md:rounded-[24px] border border-white/10 min-h-[70vh] lg:min-h-[min(80vh,820px)]">
+        {/* Mobile club picker — pins are too small to tap, this fixes selection on touch */}
+        <div className="mb-3 flex gap-2 overflow-x-auto pb-2 snap-x snap-proximity hide-scrollbar overscroll-x-contain -mx-5 px-5 md:mx-0 md:px-0 lg:hidden">
+          {clubPins.map((pin) => (
+            <button
+              key={pin.id}
+              type="button"
+              onClick={() => setActiveId(pin.id)}
+              aria-pressed={pin.id === activeId}
+              className={`shrink-0 snap-start rounded-full border px-4 py-2 text-[11px] tracking-[0.08em] uppercase transition-all duration-300 ${
+                pin.id === activeId
+                  ? 'bg-white text-black border-white'
+                  : 'border-white/20 text-white/70 hover:border-white/50 hover:text-white'
+              }`}
+            >
+              {pin.name}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 overflow-hidden rounded-[20px] md:rounded-[24px] border border-white/10">
           {/* LEFT — club visual + details */}
-          <div className="relative flex flex-col bg-[#111] min-h-[50vh] lg:min-h-0">
-            <div className="relative flex-1 min-h-[280px] overflow-hidden">
+          <div className="relative flex flex-col bg-[#111]">
+            <div className="relative h-[220px] sm:h-[280px] overflow-hidden lg:h-auto lg:flex-1 lg:min-h-[320px]">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={active.id}
@@ -101,14 +120,16 @@ export default function MapClubsSection() {
             </div>
           </div>
 
-          {/* RIGHT — real Leaflet map */}
-          <div className="relative min-h-[50vh] lg:min-h-0 bg-[#eef1f3]">
+          {/* RIGHT — real Leaflet map. Fixed height on mobile so it never traps page Y-scroll */}
+          <div className="relative h-[320px] sm:h-[360px] lg:h-auto lg:min-h-[min(80vh,820px)] bg-[#eef1f3]">
             <MapContainer
               center={[active.lat, active.lng]}
               zoom={11}
               scrollWheelZoom={false}
-              className="absolute inset-0 h-full w-full z-0"
-              style={{ background: '#eef1f3' }}
+              dragging={true}
+              tap={false}
+              className="absolute inset-0 h-full w-full z-0 fc-map"
+              style={{ background: '#eef1f3', touchAction: 'pan-y' }}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
